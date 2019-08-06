@@ -5,13 +5,13 @@ const routes = express.Router()
 
 const controllers = requireDir('./controllers')
 
-routes.get('/', controllers.UserController.index)
+routes.get('/', controllers.UserController.index) // Não existe na aplicaçao real
 
 routes.post('/login', controllers.AuthController.login)
 
 routes.post('/recover', controllers.AuthController.recoverPassword)
 
-routes.get('/dashboard/:id', controllers.UserController.dashboard)
+routes.get('/dashboard/:id', controllers.UserController.dashboard) // Fututo metodo index
 
 // routes.use(authMiddleware)
 
