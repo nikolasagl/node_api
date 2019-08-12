@@ -13,6 +13,10 @@ routes.post('/recover', controllers.AuthController.recoverPassword)
 
 routes.get('/dashboard/:id', controllers.UserController.dashboard) // Fututo metodo index
 
+routes.get('/user/:id', controllers.UserController.getUser)
+
+routes.get('/user/edit/:id', controllers.UserController.getUser)
+
 // routes.use(authMiddleware)
 
 // routes.get('/users', controllers.UserController.index)

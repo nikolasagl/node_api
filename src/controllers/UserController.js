@@ -37,6 +37,11 @@ module.exports = {
                      value: subsCalculado.total_bruto
                   },
                   {
+                     title: 'cupom',
+                     label: 'Cupom Recebido',
+                     value: null
+                  },
+                  {
                      title: 'totalLiquido',
                      label: 'Saldo Liquido',
                      value: subsCalculado.total_liquito
@@ -65,5 +70,46 @@ module.exports = {
       } catch (error) {
          res.status(400).json({ error: 'Não foi possivel recuperar os dados do Usuario. 2' })
       }
-   }
+   },
+
+   async getUser(req, res) {
+
+      try {
+         
+         const id = req.params.id
+
+         const user = await db('pessoa').where('codigo_pes', id).first()
+
+         if (!user) {
+            res.status(400).json({error: 'Usuario nao encontrado!'})
+         }
+
+         user.senha_pes = undefined
+
+         const cidade = await db('cidades').where('codigo_cid', user.codigo_cid).first()
+         const estado = await db('estados').where('codigo_est', cidade.codigo_est).first()
+
+         user.cidade_pes = cidade
+         user.estado_pes = estado
+
+         res.json({
+            user
+         })
+
+      } catch (error) {
+         res.status(400).json({error: 'Houve um erro ao buscar os dados do usuario. Tente novamente mais tarde!'})         
+      }
+   },
+
+   // async editUser(req, res) {
+
+   //    try {
+         
+   //       const id = req.params.id
+
+
+   //    } catch (error) {
+         
+   //    }
+   // },
 }
