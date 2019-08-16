@@ -1,6 +1,5 @@
-module.exports = {
+const UsuarioHelper = {
 
-   generateHash() {
-      console.log('Generate Password Hash')
-   }
 }
+
+module.exports = UsuarioHelper

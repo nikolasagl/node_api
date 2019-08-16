@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken")
 const secret = require('../config/secret')
 const { encode, decode } = require('base-64')
 
-var AutenticacaoHelper = {
+const AutenticacaoHelper = {
 
    gerarToken: (usuario) => {
       return jwt.sign({ id: usuario.codigo_pes }, secret.secret, {
