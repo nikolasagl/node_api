@@ -1,26 +1,39 @@
 const jwt = require("jsonwebtoken")
-const secret = require('../config/auth')
+const secret = require('../config/secret')
 const { encode, decode } = require('base-64')
 
-module.exports = {
+var AutenticacaoHelper = {
 
-   generateToken(user) {
-      return jwt.sign({ id: user.id }, secret.secret, {
+   gerarToken: (usuario) => {
+      return jwt.sign({ id: usuario.codigo_pes }, secret.secret, {
          expiresIn: 86400
       })
    },
 
    // DECODE
-   atou(b64) {
+   decode64: (b64) => {
       return decodeURIComponent(escape(decode(b64)));
    },
 
    // ENCODE
-   utoa(data) {
+   encode64: (data) => {
       return encode(unescape(encodeURIComponent(data)));
    },
 
-   md5(string) {
+   _trySenhas: (partial, response, co, i) => {
+      if (i == ((partial.length) - 1)) {
+         response.push([AutenticacaoHelper.md5(co+partial[i][0])])
+         response.push([AutenticacaoHelper.md5(co+partial[i][1])])
+         response.push([AutenticacaoHelper.md5(co+partial[i][2])])
+      } else {
+         AutenticacaoHelper._trySenhas(partial, response, co+partial[i][0], i+1)
+         AutenticacaoHelper._trySenhas(partial, response, co+partial[i][1], i+1)
+         AutenticacaoHelper._trySenhas(partial, response, co+partial[i][2], i+1)
+      }
+      return response
+   },
+
+   md5: (string) => {
       function RotateLeft(lValue, iShiftBits) {
          return (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits));
       }
@@ -198,3 +211,5 @@ module.exports = {
       var temp = WordToHex(a) + WordToHex(b) + WordToHex(c) + WordToHex(d); return temp.toLowerCase();
    }
 }
+
+module.exports = AutenticacaoHelper

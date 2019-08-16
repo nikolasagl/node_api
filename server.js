@@ -1,11 +1,15 @@
 const express = require('express')
-const app = express()
-const consign = require('consign')
+const bodyParser = require('body-parser')
+const cors = require('cors')
 const router = require('./src/routes')
 
-consign()
-   .then('./src/middlewares/middlewares.js')
-   .into(app)
+const app = express()
+
+app.use(bodyParser.json())
+
+app.use(cors({
+   origin: '*'
+}))
 
 app.use(router)
 

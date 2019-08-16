@@ -1,14 +1,14 @@
 const db = require('../config/database')
-const { generateHash } = require('../helpers/UserHelper')
+const { generateHash } = require('../helpers/UsuarioHelper')
 
 module.exports = {
    // Nao deve existir em produçao
    async index (req, res) {
 
-      const users = await db('pessoa')
+      const usuarios = await db('pessoa')
 
-      if (users) {
-         res.json({users})
+      if (usuarios) {
+         res.json({usuarios})
       }
    },
 
@@ -72,28 +72,28 @@ module.exports = {
       }
    },
 
-   async getUser(req, res) {
+   async getUsuario(req, res) {
 
       try {
          
          const id = req.params.id
 
-         const user = await db('pessoa').where('codigo_pes', id).first()
+         const usuario = await db('pessoa').where('codigo_pes', id).first()
 
-         if (!user) {
+         if (!usuario) {
             res.status(400).json({error: 'Usuario nao encontrado!'})
          }
 
-         user.senha_pes = undefined
+         usuario.senha_pes = undefined
 
-         const cidade = await db('cidades').where('codigo_cid', user.codigo_cid).first()
+         const cidade = await db('cidades').where('codigo_cid', usuario.codigo_cid).first()
          const estado = await db('estados').where('codigo_est', cidade.codigo_est).first()
 
-         user.cidade_pes = cidade
-         user.estado_pes = estado
+         usuario.cidade_pes = cidade
+         usuario.estado_pes = estado
 
          res.json({
-            user
+            usuario
          })
 
       } catch (error) {
