@@ -1,10 +1,36 @@
+const { body, validationResult } = require('express-validator')
 const AutenticacaoHelper = require('../helpers/AutenticacaoHelper')
+const MainHelper = require('../helpers/MainHelper')
 const UsuarioModel = require('../model/UsuarioModel')
 
 module.exports = {
 
+   validate(method) {
+
+      switch (method) {
+         case 'login':
+            return [
+               body('username', 'O Campo CPF/CNPJ é obrigatório').exists().not().isEmpty(),
+               body('password', 'O campo Senha é obrigatório.').exists().not().isEmpty(),
+               body('radio').exists().isInt()
+            ]
+         
+         case 'recuperar': 
+            return [
+               body('username', 'O Campo CPF/CNPJ é obrigatório').exists().not().isEmpty(),
+               body('radio').exists().isInt()
+            ]
+      }
+   },
+
    async login(req, res) {
       try {
+         const erros = validationResult(req)
+
+         if (!erros.isEmpty()) {
+            return res.status(422).json({ errors: erros.array() })
+         }
+
          const input = req.body
 
          if (input.radio === 1) {
@@ -63,25 +89,35 @@ module.exports = {
 
    async recuperarSenha(req, res) {
       try {
-         const data = req.body
+         const input = req.body
 
-         if (data.radio === 1) {
-            var user = await db('pessoa').where('cpf_pes', data.username).first()
-         } else if (data.radio === 2) {
-            var user = await db('pessoa').where('cnpj_pes', data.username).first()
+         if (input.radio === 1) {
+            var usuario = await UsuarioModel.buscaUsuarioCpf(input.username)
+         } else if (input.radio === 2) {
+            var usuario = await UsuarioModel.buscaUsuarioCnpj(input.username)
          }
 
-         if (!user)
-            return res.status(400).json({ error: "User not found!" })
+         if (!usuario)
+            return res.status(400).json({ error: "Usuario não encontrado." })
 
-         // Aqui logica para envio de email e geraçao de senha provisoria
+         const options = {
+            method: "POST",
+            url: "http://localhost/fmi_cliente/login_cliente/recuperaSenha",
+            data: {
+               documento: input.username
+            }
+         }
+
+         console.log(options)
+
+         var teste = MainHelper.recuperarSenha(options)
 
          return res.json({
-            email: user.email_pes
+            email: teste
          })
 
       } catch (error) {
-         return res.status(400).json({ error: "Recover password failed! Try again later. Error: " + error })
+         return res.status(400).json({ error: "Recuperação de senha falhou. Tente novamente mais tarde. Error: " + error })
       }
    }
 }

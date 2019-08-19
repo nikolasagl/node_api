@@ -2,7 +2,7 @@ const db = require('../config/database')
 
 const UsuarioModel = {
 
-   buscarTodos: async () => {
+   buscaTodos: async () => {
       try {
          var usuarios = await db('pessoa')      
          
@@ -16,7 +16,7 @@ const UsuarioModel = {
       }
    },
 
-   buscarUsuarioId: async (id) => {
+   buscaUsuarioId: async (id) => {
       try {
          var user = await db('pessoa').where('codigo_pes', id).first()      
          

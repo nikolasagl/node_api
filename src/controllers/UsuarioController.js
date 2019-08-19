@@ -5,7 +5,7 @@ module.exports = {
    // Nao deve existir em produçao
    async index (req, res) {
 
-      const usuarios = await db('pessoa')
+      const usuarios = await UsuarioModel.buscaTodos()
 
       if (usuarios) {
          res.json({usuarios})
