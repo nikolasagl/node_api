@@ -1,4 +1,5 @@
 const UsuarioModel = require('../model/UsuarioModel')
+const SubscricaoModel = require('../model/SubscricaoModel')
 
 module.exports = {
 
@@ -16,72 +17,79 @@ module.exports = {
 
       try {
          const id = req.params.id
+         console.log(id)
 
-         var subs = await UsuarioModel.buscaSubscricao(id)
+         var subs = await SubscricaoModel.buscaSubscricao(id)
 
-         if (subs.codigo_subs) {
-            var subsCalculado = await UsuarioModel.buscaSubsCalculado(subs.codigo_subs)
-            var resgates = await UsuarioModel.buscaResgates(subs.codigo_subs)
+         var totalSubs = 0
+         subs.forEach(element => {
+            totalSubs += element.valor_subs
+         })
 
-            res.json({
-               dash: [
-                  {
-                     title: 'valorSub',
-                     label: 'Valor Investido',
-                     value: subs.valor_subs
-                  },
-                  {
-                     title: 'totalBruto',
-                     label: 'Saldo Bruto',
-                     value: subsCalculado.total_bruto
-                  },
-                  {
-                     title: 'cupom',
-                     label: 'Cupom Recebido',
-                     value: null
-                  },
-                  {
-                     title: 'totalLiquido',
-                     label: 'Saldo Liquido',
-                     value: subsCalculado.total_liquito
-                  },
-                  {
-                     title: 'totalRendB',
-                     label: 'Lucro Bruto',
-                     value: subsCalculado.total_rend_bruto
-                  },
-                  {
-                     title: 'totalRendL',
-                     label: 'Lucro Liquido',
-                     value: subsCalculado.total_rend_liquido
-                  },
-                  {
-                     title: 'resgates',
-                     label: 'Resgates',
-                     value: resgates ? resgates : null
-                  }
-               ]
-            })
-         } else {
-            res.status(400).json({ error: 'Não foi possivel recuperar os dados do Usuario.' })
-         }
+         var subsCalculado = await SubscricaoModel.buscaSubsCalculado(id)
+         // var resgates = await SubscricaoModel.buscaResgates(subs.codigo_subs)
+
+         res.json({
+            dash: [
+               {
+                  title: 'valorSub',
+                  label: 'Valor Investido',
+                  value: totalSubs
+               },
+               {
+                  title: 'resgates',
+                  label: 'Resgates',
+                  value: null
+                  // value: resgates ? resgates : null
+               },
+               {
+                  title: 'cupom',
+                  label: 'Cupom Recebido',
+                  value: null
+               },
+               {
+                  title: 'totalRendB',
+                  label: 'Lucro Bruto',
+                  value: subsCalculado.totalRendBruto
+               },
+               {
+                  title: 'totalBruto',
+                  label: 'Saldo Bruto',
+                  value: subsCalculado.totalBruto
+               },
+               {
+                  title: 'totalRendL',
+                  label: 'Lucro Liquido',
+                  value: subsCalculado.totalRendLiquido
+               },
+               {
+                  title: 'totalLiquido',
+                  label: 'Saldo Liquido',
+                  value: subsCalculado.totalLiquido
+               }
+            ]
+         })
          
       } catch (error) {
-         res.status(400).json({ error: 'Não foi possivel recuperar os dados do Usuario.' })
+         res.status(400).json({ error: 'Não foi possivel recuperar os dados do Usuario. Error: '+error })
       }
    },
 
-   async getUsuario(req, res) {
-         
-      const id = req.params.id
+   async buscaUsuario (req, res) {
 
-      const usuario = await UsuarioModel.buscaUsuarioComEndereco(id)
+      try {
+         const id = req.params.id
 
-      console.log(usuario)
+         const usuario = await UsuarioModel.buscaUsuarioComEndereco(id)
 
-      if (usuario)
-         res.status(200).json({ usuario })
-      else
-         res.status(400).json({ error: 'Usuario não encontrado.' })
-   }
+         if (usuario)
+            res.status(200).json({ usuario })
+         else
+            res.status(400).json({ error: 'Usuario não encontrado.' })
+      } catch (error) {
+         res.status(400).json({ error })         
+      }
+   },
+
+   async update (req, res) {},
 }

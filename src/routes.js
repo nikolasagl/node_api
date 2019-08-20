@@ -16,10 +16,12 @@ routes.post('/recuperar', controllers.AutenticacaoController.recuperarSenha)
 // TODAS ROTAS DO MIDDLEWARE PARA BAIXO SERÃO EXECUTADAS APENAS APOS O MIDDLEWARE SER EXECUTADO
 // routes.use(AutenticacaoMiddlewareProvisorio) // PROVISORIO ATÉ DESCOBRIR O QUE HÁ DE ERRADO COM O PASSPORT
 
-routes.get('/dashboard/:id', AutenticacaoMiddlewareProvisorio, controllers.UsuarioController.dashboard)
+// ROTAS USUARIO
+routes.get('/usuario/:id/dashboard', AutenticacaoMiddlewareProvisorio, controllers.UsuarioController.dashboard)
+routes.get('/usuario/:id', AutenticacaoMiddlewareProvisorio, controllers.UsuarioController.buscaUsuario)
+routes.get('/usuario/:id/edit', AutenticacaoMiddlewareProvisorio, controllers.UsuarioController.buscaUsuario)
+routes.put('/usuario/:id', AutenticacaoMiddlewareProvisorio, controllers.UsuarioController.update)
 
-routes.get('/usuario/:id', AutenticacaoMiddlewareProvisorio, controllers.UsuarioController.getUsuario)
 
-routes.get('/usuario/edit/:id', AutenticacaoMiddlewareProvisorio, controllers.UsuarioController.getUsuario)
 
 module.exports = routes

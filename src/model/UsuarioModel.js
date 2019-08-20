@@ -74,48 +74,6 @@ const UsuarioModel = {
       }
    },
 
-   buscaSubscricao: async (id) => {
-      try {
-         var subs = await db('subscricao').where('codigo_pes', id).first()
-         
-         if (subs)
-            return subs
-         else
-            return false
-      
-      } catch (error) {
-         return false
-      }
-   },
-
-   buscaSubsCalculado: async (codigo_subs) => {
-      try {
-         var subs = await db('subscricao_calculado').where('codigo_subs', codigo_subs).first()
-         
-         if (subs)
-            return subs
-         else
-            return false
-      
-      } catch (error) {
-         return false
-      }
-   },
-
-   buscaResgates: async (codigo_subs) => {
-      try {
-         var resgates = await db('resgate').where('codigo_subs', codigo_subs).first()
-         
-         if (resgates)
-            return resgates
-         else
-            return false
-      
-      } catch (error) {
-         return false
-      }
-   },
-
    buscaUsuarioComEndereco: async (id) => {
       try {
          const usuario = await db('pessoa').where('codigo_pes', id).first()

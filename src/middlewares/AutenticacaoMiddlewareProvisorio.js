@@ -19,7 +19,7 @@ module.exports = (req, res, next) => {
 
   jwt.verify(token, secret.secret, (err, decoded) => {
     if (err)
-      return res.status(401).send({ error: 'Invalid token!' + err })
+      return res.status(401).send({ error: 'Invalid token! ' + err })
 
     req.userId = decoded.id
 

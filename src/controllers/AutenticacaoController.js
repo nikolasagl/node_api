@@ -26,11 +26,11 @@ module.exports = {
    async login(req, res) {
       try {
          const erros = validationResult(req)
-
+         
          if (!erros.isEmpty()) {
-            return res.status(422).json({ errors: erros.array() })
+            return res.status(422).json({ errors: erros.array() })   
          }
-
+         
          const input = req.body
 
          if (input.radio === 1) {
@@ -100,20 +100,14 @@ module.exports = {
          if (!usuario)
             return res.status(400).json({ error: "Usuario não encontrado." })
 
+         const data = { documento: input.username }
          const options = {
             method: "POST",
             url: "http://localhost/fmi_cliente/login_cliente/recuperaSenha",
-            data: {
-               documento: input.username
-            }
          }
 
-         console.log(options)
-
-         var teste = MainHelper.recuperarSenha(options)
-
-         return res.json({
-            email: teste
+         MainHelper.phpServerRequest(options, data).then((response) => {
+            return res.json({ response })
          })
 
       } catch (error) {
