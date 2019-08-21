@@ -58,9 +58,9 @@ const UsuarioModel = {
    logar: async (data) => {
       try {
          var user = await db('pessoa')
+                           .whereIn('senha_pes', data.password)
                            .where('cpf_pes', data.username)
                            .orWhere('cnpj_pes', data.username)
-                           .whereIn('senha_pes', data.password)
                            .where('ativo_pes', 1)
                            .first()
          
@@ -81,9 +81,10 @@ const UsuarioModel = {
          if (usuario) {
             const cidade = await db('cidades').where('codigo_cid', usuario.codigo_cid).first()
             const estado = await db('estados').where('codigo_est', cidade.codigo_est).first()
-   
+            
             usuario.cidade_pes = cidade
             usuario.estado_pes = estado
+            console.log(usuario)
 
             return usuario
 

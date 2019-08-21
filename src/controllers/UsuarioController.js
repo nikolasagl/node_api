@@ -17,7 +17,6 @@ module.exports = {
 
       try {
          const id = req.params.id
-         console.log(id)
 
          var subs = await SubscricaoModel.buscaSubscricao(id)
 
