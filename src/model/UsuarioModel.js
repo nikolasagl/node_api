@@ -84,7 +84,6 @@ const UsuarioModel = {
             
             usuario.cidade_pes = cidade
             usuario.estado_pes = estado
-            console.log(usuario)
 
             return usuario
 

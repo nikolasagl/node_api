@@ -16,7 +16,7 @@ routes.post('/recuperar', controllers.AutenticacaoController.recuperarSenha)
 // ROTAS USUARIO
 routes.get('/usuario/:id/dashboard', AutenticacaoMiddlewareProvisorio, controllers.UsuarioController.dashboard)
 routes.get('/usuario/:id', AutenticacaoMiddlewareProvisorio, controllers.UsuarioController.buscaUsuario)
-routes.get('/usuario/:id/edit', AutenticacaoMiddlewareProvisorio, controllers.UsuarioController.buscaUsuario)
+routes.get('/usuario/:id/edit', AutenticacaoMiddlewareProvisorio, controllers.UsuarioController.edit)
 routes.put('/usuario/:id', AutenticacaoMiddlewareProvisorio, controllers.UsuarioController.update)
 
 module.exports = routes
