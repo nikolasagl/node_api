@@ -4,19 +4,22 @@ const SubscricaoModel = require('../model/SubscricaoModel')
 module.exports = {
 
    // Nao deve existir em produçao
-   async index (req, res) {
+   async index(req, res) {
 
       const usuarios = await UsuarioModel.buscaTodos()
 
       if (usuarios) {
-         res.json({usuarios})
+         res.json({ usuarios })
       }
    },
 
-   async dashboard (req, res) {
+   async dashboard(req, res) {
 
       try {
-         const id = req.params.id
+         if (parseInt(req.params.id) === req.userId)
+            var id = req.params.id
+         else
+            res.status(401).json({ error: 'Problema de autenticação. Faça login novamente.' })
 
          var subs = await SubscricaoModel.buscaSubscricao(id)
 
@@ -68,32 +71,39 @@ module.exports = {
                }
             ]
          })
-         
+
       } catch (error) {
-         res.status(400).json({ error: 'Não foi possivel recuperar os dados do Usuario. Error: '+error })
+         res.status(400).json({ error: 'Não foi possivel recuperar os dados do Usuario. Error: ' + error })
       }
    },
 
-   async buscaUsuario (req, res) {
+   async buscaUsuario(req, res) {
 
       try {
-         const id = req.params.id
+         if (parseInt(req.params.id) === req.userId)
+            var id = req.params.id
+         else
+            res.status(401).json({ error: 'Problema de autenticação. Faça login novamente.' })
 
          const usuario = await UsuarioModel.buscaUsuarioComEndereco(id)
+         usuario.userId = req.userId
 
          if (usuario)
             res.status(200).json({ usuario })
          else
             res.status(400).json({ error: 'Usuario não encontrado.' })
       } catch (error) {
-         res.status(400).json({ error })         
+         res.status(400).json({ error })
       }
    },
 
-   async edit (req, res) {
+   async edit(req, res) {
 
       try {
-         const id = req.params.id
+         if (parseInt(req.params.id) === req.userId)
+            var id = req.params.id
+         else
+            res.status(401).json({ error: 'Problema de autenticação. Faça login novamente.' })
 
          const aux = await UsuarioModel.buscaUsuarioComEndereco(id)
 
@@ -124,13 +134,17 @@ module.exports = {
          else
             res.status(400).json({ error: 'Usuario não encontrado.' })
       } catch (error) {
-         res.status(400).json({ error })         
+         res.status(400).json({ error })
       }
    },
 
-   async update (req, res) {
-      console.log(req.params.id)
-      console.log(req.headers)
+   async update(req, res) {
+      if (parseInt(req.params.id) === req.userId)
+         var id = req.params.id
+      else
+         res.status(401).json({ error: 'Problema de autenticação. Faça login novamente.' })
+      // console.log(id)
+      // console.log(req.headers)
       console.log(req.body)
    },
 }

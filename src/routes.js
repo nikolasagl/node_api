@@ -6,12 +6,13 @@ const AutenticacaoMiddlewareProvisorio = require('./middlewares/AutenticacaoMidd
 const routes = express.Router()
 
 const controllers = requireDir('./controllers')
+const validators = requireDir('./validators')
 
 routes.get('/', controllers.UsuarioController.index) // Não existe na aplicaçao real
 
-routes.all('/login', controllers.AutenticacaoController.validate('login'), controllers.AutenticacaoController.login)
+routes.all('/login', validators.AutenticacaoValidation.validate('login'), controllers.AutenticacaoController.login)
 
-routes.post('/recuperar', controllers.AutenticacaoController.recuperarSenha)
+routes.post('/recuperar', validators.AutenticacaoValidation.validate('recuperar'), controllers.AutenticacaoController.recuperarSenha)
 
 // ROTAS USUARIO
 routes.get('/usuario/:id/dashboard', AutenticacaoMiddlewareProvisorio, controllers.UsuarioController.dashboard)

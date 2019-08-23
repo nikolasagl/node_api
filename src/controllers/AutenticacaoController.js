@@ -1,27 +1,10 @@
-const { body, validationResult } = require('express-validator')
+const { validationResult } = require('express-validator')
 const AutenticacaoHelper = require('../helpers/AutenticacaoHelper')
 const MainHelper = require('../helpers/MainHelper')
 const UsuarioModel = require('../model/UsuarioModel')
+const { setCpfMask, setCnpjMask } = require('../helpers/UsuarioHelper')
 
 module.exports = {
-
-   validate(method) {
-
-      switch (method) {
-         case 'login':
-            return [
-               body('username', 'O Campo CPF/CNPJ é obrigatório').exists().not().isEmpty(),
-               body('password', 'O campo Senha é obrigatório.').exists().not().isEmpty(),
-               body('radio').exists().isInt()
-            ]
-         
-         case 'recuperar': 
-            return [
-               body('username', 'O Campo CPF/CNPJ é obrigatório').exists().not().isEmpty(),
-               body('radio').exists().isInt()
-            ]
-      }
-   },
 
    async login(req, res) {
       try {
@@ -34,9 +17,11 @@ module.exports = {
          const input = req.body
 
          if (input.radio === 1) {
-            var usuario = await UsuarioModel.buscaUsuarioCpf(input.username)
+            var aux = setCpfMask(input.username) // PROVISORIO, POIS DEVE VIR DO FRONT COM A MASCARA COMPLETA
+            var usuario = await UsuarioModel.buscaUsuarioCpf(aux)
          } else if (input.radio === 2) {
-            var usuario = await UsuarioModel.buscaUsuarioCnpj(input.username)
+            var aux = setCnpjMask(input.username) // PROVISORIO, POIS DEVE VIR DO FRONT COM A MASCARA COMPLETA
+            var usuario = await UsuarioModel.buscaUsuarioCnpj(aux)
          }
 
          if (!usuario)
@@ -61,8 +46,9 @@ module.exports = {
          var response = AutenticacaoHelper._trySenhas(parcial, [], '', 0)
 
          const data = {
-            username: input.username,
-            password: response
+            username: aux,
+            password: response,
+            radio: input.radio
          }         
 
          const retorno = await UsuarioModel.logar(data)
@@ -89,6 +75,12 @@ module.exports = {
 
    async recuperarSenha(req, res) {
       try {
+         const erros = validationResult(req)
+         
+         if (!erros.isEmpty()) {
+            return res.status(422).json({ errors: erros.array() })   
+         }
+         
          const input = req.body
 
          if (input.radio === 1) {

@@ -18,7 +18,7 @@ const UsuarioModel = {
 
    buscaUsuarioId: async (id) => {
       try {
-         var user = await db('pessoa').where('codigo_pes', id).first()      
+         var user = await db('pessoa').where('codigo_pes', id).first() 
          
          if (user)
             return user
@@ -57,12 +57,19 @@ const UsuarioModel = {
 
    logar: async (data) => {
       try {
-         var user = await db('pessoa')
-                           .whereIn('senha_pes', data.password)
-                           .where('cpf_pes', data.username)
-                           .orWhere('cnpj_pes', data.username)
-                           .where('ativo_pes', 1)
-                           .first()
+         if (data.radio === 1) {
+            var user = await db('pessoa')
+                              .whereIn('senha_pes', data.password)
+                              .where('cpf_pes', data.username)
+                              .where('ativo_pes', 1)
+                              .first()
+         } else if (data.radio === 2) {
+            var user = await db('pessoa')
+                              .whereIn('senha_pes', data.password)
+                              .where('cnpj_pes', data.username)
+                              .where('ativo_pes', 1)
+                              .first()
+         }
          
          if (user) 
             return true
