@@ -1,4 +1,4 @@
-const { body } = require('express-validator')
+const { check } = require('express-validator')
 
 module.exports = {
 
@@ -7,16 +7,29 @@ module.exports = {
       switch (method) {
          case 'login':
             return [
-               body('username', 'O Campo CPF/CNPJ é obrigatório').exists().not().isEmpty(),
-               body('password', 'O campo Senha é obrigatório.').exists().not().isEmpty(),
-               body('radio').exists().isInt()
+               check('username', 'O Campo CPF/CNPJ é obrigatório')
+                  .exists()
+                  .not().isEmpty(),
+
+               check('password', 'O campo Senha é obrigatório.')
+                  .exists()
+                  .not().isEmpty(),
+
+               check('radio')
+                  .exists()
+                  .isInt()
             ]
          
          case 'recuperar': 
             return [
-               body('username', 'O Campo CPF/CNPJ é obrigatório').exists().not().isEmpty(),
-               body('radio').exists().isInt()
+               check('username', 'O Campo CPF/CNPJ é obrigatório')
+                  .exists()
+                  .not().isEmpty(),
+
+               check('radio')
+                  .exists()
+                  .isInt()
             ]
       }
-   },
+   }
 }

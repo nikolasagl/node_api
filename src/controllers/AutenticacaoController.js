@@ -11,7 +11,7 @@ module.exports = {
          const erros = validationResult(req)
          
          if (!erros.isEmpty()) {
-            return res.status(422).json({ errors: erros.array() })   
+            return res.json({ errors: erros.array() })   
          }
          
          const input = req.body
@@ -78,7 +78,7 @@ module.exports = {
          const erros = validationResult(req)
          
          if (!erros.isEmpty()) {
-            return res.status(422).json({ errors: erros.array() })   
+            return res.json({ errors: erros.array() })   
          }
          
          const input = req.body
@@ -90,7 +90,7 @@ module.exports = {
          }
 
          if (!usuario)
-            return res.status(400).json({ error: "Usuario não encontrado." })
+            return res.json({ error: "Usuario não encontrado." })
 
          const data = { documento: input.username }
          const options = {
@@ -103,7 +103,7 @@ module.exports = {
          })
 
       } catch (error) {
-         return res.status(400).json({ error: "Recuperação de senha falhou. Tente novamente mais tarde. Error: " + error })
+         return res.json({ error: "Recuperação de senha falhou. Tente novamente mais tarde. Error: " + error })
       }
    }
 }
