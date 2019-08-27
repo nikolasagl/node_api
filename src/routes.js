@@ -20,4 +20,6 @@ routes.get('/usuario/:id', AutenticacaoMiddlewareProvisorio, controllers.Usuario
 routes.get('/usuario/:id/edit', AutenticacaoMiddlewareProvisorio, controllers.UsuarioController.edit)
 routes.put('/usuario/:id', AutenticacaoMiddlewareProvisorio, controllers.UsuarioController.update)
 
+routes.get('/agenda/:id', AutenticacaoMiddlewareProvisorio, controllers.AgendaController.index)
+
 module.exports = routes

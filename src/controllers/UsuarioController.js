@@ -19,7 +19,7 @@ module.exports = {
          if (parseInt(req.params.id) === req.userId)
             var id = req.params.id
          else
-            res.status(401).json({ error: 'Problema de autenticação. Faça login novamente.' })
+            res.json({ error: 'Problema de autenticação. Faça login novamente.' })
 
          var subs = await SubscricaoModel.buscaSubscricao(id)
 
@@ -73,7 +73,7 @@ module.exports = {
          })
 
       } catch (error) {
-         res.status(400).json({ error: 'Não foi possivel recuperar os dados do Usuario. Error: ' + error })
+         res.json({ error: 'Não foi possivel recuperar os dados do Usuario. Error: ' + error })
       }
    },
 
@@ -83,17 +83,17 @@ module.exports = {
          if (parseInt(req.params.id) === req.userId)
             var id = req.params.id
          else
-            res.status(401).json({ error: 'Problema de autenticação. Faça login novamente.' })
+            res.json({ error: 'Problema de autenticação. Faça login novamente.' })
 
          const usuario = await UsuarioModel.buscaUsuarioComEndereco(id)
          usuario.userId = req.userId
 
          if (usuario)
-            res.status(200).json({ usuario })
+            res.json({ usuario })
          else
-            res.status(400).json({ error: 'Usuario não encontrado.' })
+            res.json({ error: 'Usuario não encontrado.' })
       } catch (error) {
-         res.status(400).json({ error })
+         res.json({ error })
       }
    },
 
@@ -103,7 +103,7 @@ module.exports = {
          if (parseInt(req.params.id) === req.userId)
             var id = req.params.id
          else
-            res.status(401).json({ error: 'Problema de autenticação. Faça login novamente.' })
+            res.json({ error: 'Problema de autenticação. Faça login novamente.' })
 
          const aux = await UsuarioModel.buscaUsuarioComEndereco(id)
 
@@ -130,11 +130,11 @@ module.exports = {
          }
 
          if (usuario)
-            res.status(200).json({ usuario })
+            res.json({ usuario })
          else
-            res.status(400).json({ error: 'Usuario não encontrado.' })
+            res.json({ error: 'Usuario não encontrado.' })
       } catch (error) {
-         res.status(400).json({ error })
+         res.json({ error })
       }
    },
 
@@ -142,7 +142,7 @@ module.exports = {
       if (parseInt(req.params.id) === req.userId)
          var id = req.params.id
       else
-         res.status(401).json({ error: 'Problema de autenticação. Faça login novamente.' })
+         res.json({ error: 'Problema de autenticação. Faça login novamente.' })
       // console.log(id)
       // console.log(req.headers)
       console.log(req.body)
