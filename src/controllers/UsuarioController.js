@@ -1,5 +1,6 @@
 const UsuarioModel = require('../model/UsuarioModel')
 const SubscricaoModel = require('../model/SubscricaoModel')
+const ResgateModel = require('../model/ResgateModel')
 
 module.exports = {
 
@@ -24,13 +25,31 @@ module.exports = {
          var subs = await SubscricaoModel.buscaSubscricao(id)
 
          var totalSubs = 0
-         subs.forEach(element => {
+         var resgates = []
+
+         subs.forEach(async (element) => {
             totalSubs += element.valor_subs
+
+            var aux = await ResgateModel.buscaResgates(element.codigo_subs)
+            if (aux != false) resgates.push(aux)
          })
 
          var subsCalculado = await SubscricaoModel.buscaSubsCalculado(id)
-         // var resgates = await SubscricaoModel.buscaResgates(subs.codigo_subs)
+         
+         var resgateSolicitado = 0
+         var resgateCupom = 0
 
+         resgates.forEach(element => {
+            element.forEach(resgate => {
+               if (resgate.tipo_resg === 0) {
+                  resgateCupom += resgate.valor_resg
+               }
+               if (resgate.tipo_resg === 1) {
+                  resgateSolicitado += resgate.valor_resg
+               }
+            })
+         })
+         
          res.json({
             dash: [
                {
@@ -41,13 +60,12 @@ module.exports = {
                {
                   title: 'resgates',
                   label: 'Resgates',
-                  value: null
-                  // value: resgates ? resgates : null
+                  value: resgateSolicitado
                },
                {
                   title: 'cupom',
                   label: 'Cupom Recebido',
-                  value: null
+                  value: resgateCupom
                },
                {
                   title: 'totalRendB',

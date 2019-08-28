@@ -6,7 +6,7 @@ const UsuarioModel = {
       try {
          var usuarios = await db('pessoa')      
          
-         if (usuarios)
+         if (usuarios.length > 0)
             return usuarios
          else
             return false

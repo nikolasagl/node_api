@@ -13,7 +13,7 @@ const SubscricaoModel = {
                            .where('pendente_subs', false)
                            .where('pessoa.codigo_pes', id)
 
-         if (subs)
+         if (subs.length > 0)
             return subs
          else
             return false
@@ -45,20 +45,6 @@ const SubscricaoModel = {
 
       } catch (error) {
          return error
-      }
-   },
-
-   buscaResgates: async (codigo_subs) => {
-      try {
-         var resgates = await db('resgate').where('codigo_subs', codigo_subs).first()
-
-         if (resgates)
-            return resgates
-         else
-            return false
-
-      } catch (error) {
-         return false
       }
    },
 }
