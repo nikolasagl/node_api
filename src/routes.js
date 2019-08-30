@@ -22,4 +22,6 @@ routes.put('/usuario/:id', AutenticacaoMiddlewareProvisorio, controllers.Usuario
 
 routes.get('/agenda/:id', AutenticacaoMiddlewareProvisorio, controllers.AgendaController.index)
 
+routes.get('/extrato/total/:id', AutenticacaoMiddlewareProvisorio, controllers.ExtratoController.buscaExtratoTotal)
+
 module.exports = routes
