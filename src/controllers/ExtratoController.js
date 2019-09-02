@@ -12,7 +12,6 @@ module.exports = {
 
       try {
          var aux = await ExtratoModel.buscaExtratoTotal(id)
-         aux.pop()
          aux = aux[0]
          var extrato = []
          var total = 0

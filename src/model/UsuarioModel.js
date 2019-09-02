@@ -56,6 +56,7 @@ const UsuarioModel = {
    },
 
    logar: async (data) => {
+      // radio:1 == CPF / radio:2 == CNPJ
       try {
          if (data.radio === 1) {
             var user = await db('pessoa')
