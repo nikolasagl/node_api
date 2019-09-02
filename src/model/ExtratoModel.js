@@ -1,41 +1,44 @@
+const moment = require('moment')
 const db = require('../config/database')
 
 const ExtratoModel = {
 
    buscaExtratoTotal: async (id) => {
       try {
-         
          var dadosExtrato = await db.raw(
-            'select subscricao.data_subs as data, '+
-                  'sum(subscricao.valor_subs) as valor, '+
-                  "'Valor Investimento' as tipo "+
-            'from subscricao '+
-            'where subscricao.codigo_pes = '+id+' and ativo_subs = 1 and pendente_subs = 0 '+
-            'group by data '+
+            'SELECT subscricao.data_subs AS data, '+
+                  'SUM(subscricao.valor_subs) AS valor, '+
+                  "'Valor Investimento' AS tipo "+
+            'FROM subscricao '+
+            'WHERE subscricao.codigo_pes = '+id+' AND ativo_subs = 1 AND pendente_subs = 0 '+
+            'GROUP BY data '+
                         
             'UNION '+
 		                  
-            'select rendimento.data_rend as data, '+
-                  'rendimento.valor_rend as valor, '+
-                  "'Rendimento Diário' as tipo "+
-            'from rendimento inner join subscricao on rendimento.codigo_subs = subscricao.codigo_subs '+
-            'where subscricao.codigo_pes = '+id+' and pendente_subs = 0 and ativo_subs = 1 '+
-            
+            'SELECT rendimento.data_rend AS data, '+
+                  'SUM(rendimento.valor_rend) AS valor, '+
+                  "'Rendimento Diário' AS tipo "+
+            'FROM rendimento inner join subscricao on rendimento.codigo_subs = subscricao.codigo_subs '+
+            'WHERE subscricao.codigo_pes = '+id+' AND pendente_subs = 0 AND ativo_subs = 1 AND ativo_rend = 1 '+
+            'GROUP BY data '+
+
             'UNION '+
             
-            'select resgate.dataresgatado_resg as data, '+
-                  '-sum(resgate.valor_resg) as valor, '+
-                  "'Resgate' as tipo "+
-            'from resgate inner join subscricao on resgate.codigo_subs = subscricao.codigo_subs '+
-            'where subscricao.codigo_pes = '+id+' and tipo_resg = 1 and pendente_subs = 0 and ativo_subs = 1 and ativo_resg = 1 '+
-            
+            'SELECT resgate.dataresgatado_resg AS data, '+
+                  '-SUM(resgate.valor_resg) AS valor, '+
+                  "'Resgate' AS tipo "+
+            'FROM resgate inner join subscricao on resgate.codigo_subs = subscricao.codigo_subs '+
+            'WHERE subscricao.codigo_pes = '+id+' AND tipo_resg = 1 AND pendente_subs = 0 AND ativo_subs = 1 AND ativo_resg = 1 '+
+            'GROUP BY data '+
+
             'UNION '+
             
-            'select resgate.dataresgatado_resg as data, '+
-                  '-sum(resgate.valor_resg) as valor, '+
-                  "'Cupom Mensal' as tipo "+
-            'from resgate inner join subscricao on resgate.codigo_subs = subscricao.codigo_subs '+
-            'where subscricao.codigo_pes = '+id+' and tipo_resg = 0 and pendente_subs = 0 and ativo_subs = 1 and ativo_resg = 1 '+
+            'SELECT resgate.dataresgatado_resg AS data, '+
+                  '-SUM(resgate.valor_resg) AS valor, '+
+                  "'Cupom Mensal' AS tipo "+
+            'FROM resgate inner join subscricao on resgate.codigo_subs = subscricao.codigo_subs '+
+            'WHERE subscricao.codigo_pes = '+id+' AND tipo_resg = 0 AND pendente_subs = 0 AND ativo_subs = 1 AND ativo_resg = 1 '+
+            'GROUP BY data '+
             'ORDER BY data asc, '+
             
             "CASE WHEN tipo = 'Resgate' THEN '1' "+

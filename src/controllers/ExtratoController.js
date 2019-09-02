@@ -12,8 +12,8 @@ module.exports = {
 
       try {
          var aux = await ExtratoModel.buscaExtratoTotal(id)
+         aux.pop()
          aux = aux[0]
-
          var extrato = []
          var total = 0
 
@@ -22,19 +22,17 @@ module.exports = {
 
          aux.forEach((element) => {
             var data = moment(element.data)
+            total += element.valor
             if (data >= dataInicial && data <= dataFinal && element.valor != 0) {
-               total += element.valor
                element.total = total
                extrato.push(element)
             }
          })
 
-         console.log(extrato)
-   
          if (extrato) {
             res.json({ extrato })
          }
-         
+
       } catch (error) {
          res.json({ error: 'Não foi possivel recuperar os dados do Extrato. Error: ' + error })
       }
