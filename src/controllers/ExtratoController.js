@@ -1,39 +1,59 @@
 const ExtratoModel = require('../model/ExtratoModel')
 const moment = require('moment')
+const PDFDocument = require('pdfkit')
+const fs = require('fs')
 
-module.exports = {
+async function buscaExtratoTotal(req, res) {
 
-   async buscaExtratoTotal(req, res) {
+   if (parseInt(req.params.id) === req.userId)
+      var id = req.params.id
+   else
+      res.json({ error: 'Problema de autenticação. Faça login novamente.' })
 
-      if (parseInt(req.params.id) === req.userId)
-         var id = req.params.id
-      else
-         res.json({ error: 'Problema de autenticação. Faça login novamente.' })
+   try {
+      var aux = await ExtratoModel.buscaExtratoTotal(id)
+      aux = aux[0]
+      var extrato = []
+      var total = 0
 
-      try {
-         var aux = await ExtratoModel.buscaExtratoTotal(id)
-         aux = aux[0]
-         var extrato = []
-         var total = 0
+      var dataInicial = moment(req.query.dataInicial)
+      var dataFinal = moment(req.query.dataFinal)
 
-         var dataInicial = moment(req.query.dataInicial)
-         var dataFinal = moment(req.query.dataFinal)
-
-         aux.forEach((element) => {
-            var data = moment(element.data)
-            total += element.valor
-            if (data >= dataInicial && data <= dataFinal && element.valor != 0) {
-               element.total = total
-               extrato.push(element)
-            }
-         })
-
-         if (extrato) {
-            res.json({ extrato })
+      aux.forEach((element) => {
+         var data = moment(element.data)
+         total += element.valor
+         if (data >= dataInicial && data <= dataFinal && element.valor != 0) {
+            element.total = total
+            extrato.push(element)
          }
+      })
 
-      } catch (error) {
-         res.json({ error: 'Não foi possivel recuperar os dados do Extrato. Error: ' + error })
+      if (extrato) {
+         if (req.query.pdf === 'false') {
+            res.json({ extrato })
+         } else {
+            var pdf = geraPdfExtratoTotal(extrato)
+
+            pdf.pipe(res)
+            pdf.end()
+         }
       }
+
+   } catch (error) {
+      res.json({ error: 'Não foi possivel recuperar os dados do Extrato. Error: ' + error })
    }
 }
+
+function geraPdfExtratoTotal(extrato) {
+   console.log('entrei pdf')
+
+   const pdf = new PDFDocument()
+
+   pdf.text('Testando PDFKit!!!')
+
+   pdf.pipe(fs.createWriteStream('extrato.pdf'))
+
+   return pdf
+}
+
+module.exports = { buscaExtratoTotal, geraPdfExtratoTotal }
