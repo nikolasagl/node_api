@@ -55,7 +55,7 @@ const ExtratoModel = {
       } catch (error) {
          return false
       }
-   }
+   },
 }
 
 module.exports = ExtratoModel

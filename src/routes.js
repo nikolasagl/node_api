@@ -22,7 +22,10 @@ routes.put('/usuario/:id', AutenticacaoMiddlewareProvisorio, controllers.Usuario
 
 routes.get('/agenda/:id', AutenticacaoMiddlewareProvisorio, controllers.AgendaController.index)
 
+routes.post('/extrato/total/:id', AutenticacaoMiddlewareProvisorio, controllers.ExtratoController.buscaExtratoTotal)
 routes.get('/extrato/total/:id', AutenticacaoMiddlewareProvisorio, controllers.ExtratoController.buscaExtratoTotal)
-routes.get('/extrato/total/:id/pdf', AutenticacaoMiddlewareProvisorio, controllers.ExtratoController.buscaExtratoTotal)
+routes.get('/extrato/saldo/:id', AutenticacaoMiddlewareProvisorio, controllers.ExtratoController.buscaSaldo)
+
+routes.post('/resgate/solicitar/:id', AutenticacaoMiddlewareProvisorio, controllers.ResgateController.solicitaResgate)
 
 module.exports = routes

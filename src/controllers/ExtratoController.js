@@ -1,4 +1,5 @@
 const ExtratoModel = require('../model/ExtratoModel')
+const SubscricaoModel = require('../model/SubscricaoModel')
 const moment = require('moment')
 const PDFDocument = require('pdfkit')
 const fs = require('fs')
@@ -56,4 +57,25 @@ function geraPdfExtratoTotal(extrato) {
    return pdf
 }
 
-module.exports = { buscaExtratoTotal, geraPdfExtratoTotal }
+async function buscaSaldo(req, res) {
+
+   if (parseInt(req.params.id) === req.userId)
+      var id = req.params.id
+   else
+      res.json({ error: 'Problema de autenticação. Faça login novamente.' })
+
+   try {
+      var saldo = await SubscricaoModel.buscaSaldo(id)
+
+      if (saldo) 
+         return res.json(saldo)
+      else
+         return false
+
+   } catch (error) {
+      console.log(error)
+      return res.json({ error: "Não foi possivel recuperar o saldo do Cliente. Tente novamente mais tarde." })
+   }
+}
+
+module.exports = { buscaExtratoTotal, geraPdfExtratoTotal, buscaSaldo }
