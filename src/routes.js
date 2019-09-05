@@ -10,7 +10,7 @@ const validators = requireDir('./validators')
 
 routes.get('/', controllers.UsuarioController.index) // Não existe na aplicaçao real
 
-routes.all('/login', validators.AutenticacaoValidation.validate('login'), controllers.AutenticacaoController.login)
+routes.post('/login', validators.AutenticacaoValidation.validate('login'), controllers.AutenticacaoController.login)
 
 routes.post('/recuperar', validators.AutenticacaoValidation.validate('recuperar'), controllers.AutenticacaoController.recuperarSenha)
 
@@ -23,7 +23,7 @@ routes.put('/usuario/:id', AutenticacaoMiddlewareProvisorio, controllers.Usuario
 routes.get('/agenda/:id', AutenticacaoMiddlewareProvisorio, controllers.AgendaController.index)
 
 routes.post('/extrato/total/:id', AutenticacaoMiddlewareProvisorio, controllers.ExtratoController.buscaExtratoTotal)
-routes.get('/extrato/total/:id', AutenticacaoMiddlewareProvisorio, controllers.ExtratoController.buscaExtratoTotal)
+routes.post('/extrato/total/pdf/:id', AutenticacaoMiddlewareProvisorio, controllers.ExtratoController.buscaExtratoTotal)
 routes.get('/extrato/saldo/:id', AutenticacaoMiddlewareProvisorio, controllers.ExtratoController.buscaSaldo)
 
 routes.post('/resgate/solicitar/:id', AutenticacaoMiddlewareProvisorio, controllers.ResgateController.solicitaResgate)

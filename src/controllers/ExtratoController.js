@@ -5,7 +5,7 @@ const PDFDocument = require('pdfkit')
 const fs = require('fs')
 
 async function buscaExtratoTotal(req, res) {
-
+   
    if (parseInt(req.params.id) === req.userId)
       var id = req.params.id
    else
@@ -17,11 +17,13 @@ async function buscaExtratoTotal(req, res) {
       var extrato = []
       var total = 0
 
-      var dataInicial = moment(req.query.dataInicial)
-      var dataFinal = moment(req.query.dataFinal)
+      var dataInicial = moment(req.body.dataInicial)
+      var dataFinal = moment(req.body.dataFinal)
 
       aux.forEach((element) => {
          var data = moment(element.data)
+         console.log(element)
+         console.log(total)
          total += element.valor
          if (data >= dataInicial && data <= dataFinal && element.valor != 0) {
             element.total = total
@@ -30,7 +32,7 @@ async function buscaExtratoTotal(req, res) {
       })
 
       if (extrato) {
-         if (req.query.pdf === 'false') {
+         if (req.body.pdf === false) {
             res.json({ extrato })
          } else {
             var pdf = geraPdfExtratoTotal(extrato)

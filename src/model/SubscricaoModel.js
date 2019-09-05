@@ -78,7 +78,7 @@ const SubscricaoModel = {
             '(select sum(valor_rendbr) from rendimento_bruto where rendimento_bruto.codigo_subs = subscricao.codigo_subs and ativo_rendbr = 1 as rendimentobruto and data_rendbr <= contabiliza_subs, '+
             '(select max(seqdia_rendbr) from rendimento_bruto where rendimento_bruto.codigo_subs = subscricao.codigo_subs and ativo_rendbr = 1 as ultimodia and data_rendbr <= contabiliza_subs, '+
             '(select sum(valor_ir) from irenda where irenda.codigo_subs = subscricao.codigo_subs and ativo_ir = 1 as ir and data_ir <= contabiliza_subs,'+
-            '(select sum(valor_resg) from resgate where resgate.codigo_subs = subscricao.codigo_subs and ativo_resg = 1 and dataresgatado_resg <= contabiliza_subs as resgate, contabiliza_subs as ultimo')
+            '(select sum(valor_resg) from resgate where resgate.codigo_subs = subscricao.codigo_subs and ativo_resg = 1 and dataresgatado_resg <= contabiliza_subs as resgate, contabiliza_subs as ultimo ')
             .from('pessoa')
             .innerJoin('subscricao', 'subscricao.codigo_pes', 'pessoa.codigo_pes')
             .where('ativo_pes', true)

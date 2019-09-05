@@ -9,7 +9,7 @@ async function solicitaResgate(req, res) {
       res.json({ error: 'Problema de autenticação. Faça login novamente.' })
 
    try {
-      const valor = req.query.valor
+      const valor = req.body.valor
       const data = moment().format('YYYY-MM-DD')
       const subs = await SubscricaoModel.buscaSubscricaoOrderedByData(id)
 
