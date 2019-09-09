@@ -1,8 +1,9 @@
 const ExtratoModel = require('../model/ExtratoModel')
 const SubscricaoModel = require('../model/SubscricaoModel')
 const moment = require('moment')
-const PDFDocument = require('pdfkit')
-const fs = require('fs')
+// const PDFDocument = require('pdfkit')
+// const fs = require('fs')
+// const path = require('path')
 
 async function buscaExtratoTotal(req, res) {
    
@@ -21,42 +22,27 @@ async function buscaExtratoTotal(req, res) {
       var dataFinal = moment(req.body.dataFinal)
 
       aux.forEach((element) => {
-         var data = moment(element.data)
-         console.log(element)
-         console.log(total)
-         total += element.valor
-         if (data >= dataInicial && data <= dataFinal && element.valor != 0) {
-            element.total = total
-            extrato.push(element)
+         if (element.data != null && element.data != undefined) {
+            var data = moment(element.data)
+            total += element.valor
+            console.log(element)
+            if (data >= dataInicial && data <= dataFinal && element.valor != 0) {
+               element.total = total
+               extrato.push(element)
+            }
          }
       })
 
-      if (extrato) {
+      if (extrato.length > 0) {
          if (req.body.pdf === false) {
             res.json({ extrato })
          } else {
-            var pdf = geraPdfExtratoTotal(extrato)
-
-            pdf.pipe(res)
-            pdf.end()
+            res.json({ extrato })
          }
       }
-
    } catch (error) {
       res.json({ error: 'Não foi possivel recuperar os dados do Extrato. Error: ' + error })
    }
-}
-
-function geraPdfExtratoTotal(extrato) {
-   console.log('entrei pdf')
-
-   const pdf = new PDFDocument()
-
-   pdf.text('Testando PDFKit!!!')
-
-   pdf.pipe(fs.createWriteStream('extrato.pdf'))
-
-   return pdf
 }
 
 async function buscaSaldo(req, res) {
@@ -80,4 +66,4 @@ async function buscaSaldo(req, res) {
    }
 }
 
-module.exports = { buscaExtratoTotal, geraPdfExtratoTotal, buscaSaldo }
+module.exports = { buscaExtratoTotal, buscaSaldo }

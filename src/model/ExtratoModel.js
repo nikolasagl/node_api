@@ -4,7 +4,6 @@ const db = require('../config/database')
 const ExtratoModel = {
    
    buscaExtratoTotal: async (id) => {
-      console.log(moment().format('YYYY-MM-DD'))
       try {
          var dadosExtrato = await db.raw(
             'SELECT subscricao.data_subs AS data, '+
@@ -29,7 +28,7 @@ const ExtratoModel = {
                   '-SUM(resgate.valor_resg) AS valor, '+
                   "'Resgate' AS tipo "+
             'FROM resgate inner join subscricao on resgate.codigo_subs = subscricao.codigo_subs '+
-            'WHERE subscricao.codigo_pes = '+id+' AND tipo_resg = 1 AND pendente_subs = 0 AND ativo_subs = 1 AND ativo_resg = 1 AND dataresgatado_resg <= COALESCE(contabiliza_subs,'+ moment().format('YYYY-MM-DD') +') '+
+            'WHERE subscricao.codigo_pes = '+id+' AND tipo_resg = 1 AND pendente_subs = 0 AND ativo_subs = 1 AND ativo_resg = 1 '+
             'GROUP BY data '+
 
             'UNION '+
