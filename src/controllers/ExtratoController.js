@@ -1,12 +1,9 @@
 const ExtratoModel = require('../model/ExtratoModel')
 const SubscricaoModel = require('../model/SubscricaoModel')
 const moment = require('moment')
-// const PDFDocument = require('pdfkit')
-// const fs = require('fs')
-// const path = require('path')
 
 async function buscaExtratoTotal(req, res) {
-   
+
    if (parseInt(req.params.id) === req.userId)
       var id = req.params.id
    else
@@ -25,7 +22,6 @@ async function buscaExtratoTotal(req, res) {
          if (element.data != null && element.data != undefined) {
             var data = moment(element.data)
             total += element.valor
-            console.log(element)
             if (data >= dataInicial && data <= dataFinal && element.valor != 0) {
                element.total = total
                extrato.push(element)
@@ -33,13 +29,17 @@ async function buscaExtratoTotal(req, res) {
          }
       })
 
-      if (extrato.length > 0) {
-         if (req.body.pdf === false) {
-            res.json({ extrato })
-         } else {
-            res.json({ extrato })
-         }
-      }
+      // if (extrato.length > 0) {
+      //    console.log(extrato)
+      //    if (req.body.pdf === false) {
+      //       res.json({ extrato })
+      //    } else {
+      //       res.json({ extrato })
+      //    }
+      // }
+      console.log(extrato)
+      res.json({ extrato })
+      
    } catch (error) {
       res.json({ error: 'Não foi possivel recuperar os dados do Extrato. Error: ' + error })
    }
